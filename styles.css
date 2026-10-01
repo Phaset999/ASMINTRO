@@ -440,6 +440,38 @@ button{font-family:inherit;}
   line-height:1.7;
   margin-bottom:22px;
 }
+.alert-banner.info{
+  background:var(--amber-50);
+  border-color:#f59e0b;
+  color:var(--amber-700);
+}
+.alert-banner.info .icon{
+  background:#f59e0b;
+}
+.alert-banner.success{
+  background:var(--green-50);
+  border-color:#86efac;
+  color:var(--green-700);
+}
+.alert-banner.success .icon{
+  background:var(--green-700);
+}
+.alert-banner.error{
+  background:#fff1f2;
+  border-color:#fca5a5;
+  color:#991b1b;
+}
+.alert-banner.error .icon{
+  background:#dc2626;
+}
+.alert-banner.interview{
+  background:#eff6ff;
+  border-color:#93c5fd;
+  color:#1e40af;
+}
+.alert-banner.interview .icon{
+  background:#2563eb;
+}
 .alert-banner .icon{
   width:20px;height:20px;
   flex-shrink:0;
@@ -647,7 +679,8 @@ button{font-family:inherit;}
   z-index:1000;
   padding:20px;
 }
-.modal-overlay.active{
+.modal-overlay.active,
+.modal-overlay:target{
   display:flex;
   animation:fadeIn 0.2s ease;
 }
@@ -674,7 +707,8 @@ button{font-family:inherit;}
   color:var(--ink-900);
   margin:0;
 }
-.modal-close{
+.modal-close,
+a.modal-close{
   background:none;
   border:none;
   font-size:22px;
@@ -683,8 +717,13 @@ button{font-family:inherit;}
   padding:4px 8px;
   line-height:1;
   border-radius:6px;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
 }
-.modal-close:hover{
+.modal-close:hover,
+a.modal-close:hover{
   background:var(--line);
   color:var(--ink-900);
 }
@@ -823,6 +862,8 @@ button{font-family:inherit;}
   cursor:pointer;
   font-weight:600;
   transition:all 0.15s;
+  display:inline-flex;
+  align-items:center;
 }
 .btn-demo:hover{
   background:#f6f4f2;
@@ -832,6 +873,69 @@ button{font-family:inherit;}
   background:var(--maroon-800);
   color:#fff;
   border-color:var(--maroon-800);
+}
+
+/* Pure CSS Demo Status Switcher */
+.sim-radio{
+  display:none;
+}
+.demo-buttons label.btn-demo{
+  cursor:pointer;
+  user-select:none;
+}
+#st1:checked ~ .demo-toolbar label[for="st1"],
+#st2:checked ~ .demo-toolbar label[for="st2"],
+#st3:checked ~ .demo-toolbar label[for="st3"],
+#st4:checked ~ .demo-toolbar label[for="st4"],
+#st5:checked ~ .demo-toolbar label[for="st5"]{
+  background:var(--maroon-800);
+  color:#fff;
+  border-color:var(--maroon-800);
+}
+
+.alert-banner-view{
+  display:none;
+}
+#st1:checked ~ .alert-st1,
+#st2:checked ~ .alert-st2,
+#st3:checked ~ .alert-st3,
+#st4:checked ~ .alert-st4,
+#st5:checked ~ .alert-st5{
+  display:flex;
+}
+
+.timeline-view{
+  display:none;
+}
+#st1:checked ~ .timeline-card .tl-view-1,
+#st2:checked ~ .timeline-card .tl-view-2,
+#st3:checked ~ .timeline-card .tl-view-3,
+#st4:checked ~ .timeline-card .tl-view-4,
+#st5:checked ~ .timeline-card .tl-view-5{
+  display:flex;
+}
+
+/* File Input Styling */
+.doc-file-input{
+  font-family:inherit;
+  font-size:12.5px;
+  color:var(--ink-700);
+}
+.doc-file-input::file-selector-button{
+  background:var(--red-600);
+  color:#fff;
+  border:none;
+  padding:6px 14px;
+  border-radius:6px;
+  font-family:inherit;
+  font-size:12px;
+  font-weight:600;
+  cursor:pointer;
+  margin-right:10px;
+  transition:background 0.2s;
+}
+.doc-file-input::file-selector-button:hover{
+  background:var(--red-700);
 }
 
 /* ---------- Toast Notification ---------- */
