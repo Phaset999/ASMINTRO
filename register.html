@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>ข้อมูลผู้สมัคร | ระบบรับสมัครนักศึกษาใหม่ มจพ.</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="brand" onclick="location.href='index.html'" style="cursor:pointer;">
+      <img src="logo.png" alt="โลโก้ มจพ.">
+      <div class="brand-text">
+        <div class="th">มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ</div>
+        <div class="en">ระบบรับสมัครนักศึกษาใหม่ (New Student Admission System)</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="user-chip">
+        <div class="user-avatar">พ</div>
+        <div class="user-meta">
+          <div class="name">พาส ปรีดา</div>
+          <div class="role">ผู้สมัครนักเรียนใหม่</div>
+        </div>
+      </div>
+      <a href="login.html" class="logout">ออกจากระบบ</a>
+    </div>
+  </header>
+
+  <main class="page-shell">
+
+    <div class="stepper">
+      <div class="step active">
+        <div class="step-circle">1</div>
+        <div class="step-label">ข้อมูลส่วนตัว & การศึกษา</div>
+      </div>
+      <div class="step">
+        <div class="step-circle">2</div>
+        <div class="step-label">เลือกหลักสูตร</div>
+      </div>
+      <div class="step">
+        <div class="step-circle">3</div>
+        <div class="step-label">อัปโหลดเอกสาร</div>
+      </div>
+      <div class="step">
+        <div class="step-circle">4</div>
+        <div class="step-label">สถานะการสมัคร</div>
+      </div>
+    </div>
+
+    <form class="card" id="registerForm" onsubmit="handleRegisterSubmit(event)">
+
+      <!-- ส่วนที่ 1: ข้อมูลส่วนตัว -->
+      <div class="form-section">
+        <h3 class="section-title"><span class="icon-dot">👤</span>1. ข้อมูลส่วนตัว (Personal Information)</h3>
+        
+        <div class="form-row" style="grid-template-columns: 140px 1fr 1fr;">
+          <div class="field" id="fieldTitle">
+            <label for="title">คำนำหน้า *</label>
+            <select id="title" required>
+              <option value="นาย">นาย</option>
+              <option value="นางสาว">นางสาว</option>
+              <option value="นาง">นาง</option>
+            </select>
+          </div>
+          <div class="field" id="fieldName">
+            <label for="fullName">ชื่อ-นามสกุล (ผู้สมัคร) *</label>
+            <input type="text" id="fullName" placeholder="เช่น พาส ปรีดา" required>
+            <div class="field-error-text">กรุณากรอกชื่อ-นามสกุล</div>
+          </div>
+          <div class="field" id="fieldIdCard">
+            <label for="idCard">เลขประจำตัวประชาชน (13 หลัก) *</label>
+            <input type="text" id="idCard" maxlength="17" placeholder="X-XXXX-XXXXX-XX-X" required>
+            <div class="field-error-text" id="idCardError">กรุณากรอกเลขบัตร 13 หลักให้ถูกต้อง</div>
+          </div>
+        </div>
+
+        <div class="form-row cols-3">
+          <div class="field" id="fieldBirthdate">
+            <label for="birthdate">วันเดือนปีเกิด *</label>
+            <input type="date" id="birthdate" required>
+            <div class="field-error-text">กรุณาเลือกวันเดือนปีเกิด</div>
+          </div>
+          <div class="field" id="fieldPhone">
+            <label for="phone">เบอร์โทรศัพท์มือถือ *</label>
+            <input type="text" id="phone" maxlength="12" placeholder="08X-XXX-XXXX" required>
+            <div class="field-error-text">กรุณากรอกเบอร์โทรศัพท์ 10 หลัก</div>
+          </div>
+          <div class="field" id="fieldEmail">
+            <label for="email">อีเมล (Email) *</label>
+            <input type="email" id="email" placeholder="เช่น pass.pr@example.com" required>
+            <div class="field-error-text">กรุณากรอกอีเมลให้ถูกต้อง</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ส่วนที่ 2: ข้อมูลการศึกษา -->
+      <div class="form-section">
+        <h3 class="section-title"><span class="icon-dot">🎓</span>2. ข้อมูลการศึกษา (Education Background)</h3>
+        
+        <div class="form-row cols-3">
+          <div class="field" id="fieldSchool">
+            <label for="school">สถานศึกษาเดิม (โรงเรียน/วิทยาลัย) *</label>
+            <input type="text" id="school" placeholder="เช่น วิทยาลัยนครสิงห์บุรี" required>
+            <div class="field-error-text">กรุณากรอกชื่อสถานศึกษา</div>
+          </div>
+          <div class="field" id="fieldEduLevel">
+            <label for="eduLevel">วุฒิการศึกษาที่จบ / กำลังศึกษา *</label>
+            <select id="eduLevel" required>
+              <option value="ม.3">ม.3</option>
+              <option value="ม.6">ม.6</option>
+              <option value="ปวช" selected>ปวช</option>
+              <option value="ปวส">ปวส</option>
+              <option value="อนุปริญญา">อนุปริญญา</option>
+              <option value="ปริญญาตรี">ปริญญาตรี</option>
+              <option value="ปริญญาตรีสำหรับสมัครปริญญาโท">ปริญญาตรีสำหรับสมัครปริญญาโท</option>
+            </select>
+          </div>
+          <div class="field" id="fieldGpax">
+            <label for="gpax">เกรดเฉลี่ยสะสม (GPAX) *</label>
+            <input type="number" step="0.01" min="0.00" max="4.00" id="gpax" placeholder="เช่น 3.85" required>
+            <div class="field-hint">ระบบจะตรวจเทียบกับเกณฑ์ขั้นต่ำของแต่ละสาขา</div>
+            <div class="field-error-text">กรุณากรอก GPAX ระหว่าง 0.00 ถึง 4.00</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ส่วนที่ 3: หลักสูตรที่ต้องการสมัคร -->
+      <div class="form-section">
+        <h3 class="section-title"><span class="icon-dot">📘</span>3. หลักสูตรที่ต้องการสมัคร (Desired Program)</h3>
+        
+        <div class="form-row cols-2">
+          <div class="field" id="fieldQuota">
+            <label for="quotaSelect">โครงการ / รอบการรับสมัคร *</label>
+            <select id="quotaSelect" required>
+              <!-- โหลดผ่าน JS -->
+            </select>
+          </div>
+          <div class="field" id="fieldCampus">
+            <label for="campusSelect">วิทยาเขตที่ต้องการศึกษา *</label>
+            <select id="campusSelect" onchange="onCampusChange()" required>
+              <!-- โหลดผ่าน JS -->
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row cols-2">
+          <div class="field" id="fieldFaculty">
+            <label for="facultySelect">คณะที่ต้องการสมัคร *</label>
+            <select id="facultySelect" onchange="onFacultyChange()" required>
+              <!-- โหลดผ่าน JS ตามวิทยาเขต -->
+            </select>
+          </div>
+          <div class="field" id="fieldMajor">
+            <label for="majorSelect">สาขาวิชา / หลักสูตร *</label>
+            <select id="majorSelect" required>
+              <!-- โหลดผ่าน JS ตามคณะ -->
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-outline" onclick="location.href='index.html'">← กลับหน้าหลัก</button>
+        <button type="submit" class="btn btn-primary">ถัดไป (อัปโหลดเอกสาร) →</button>
+      </div>
+
+    </form>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    // ตัวแปรเชื่อมต่อ Element
+    const campusSelect = document.getElementById('campusSelect');
+    const facultySelect = document.getElementById('facultySelect');
+    const majorSelect = document.getElementById('majorSelect');
+    const quotaSelect = document.getElementById('quotaSelect');
+    const idCardInput = document.getElementById('idCard');
+    const phoneInput = document.getElementById('phone');
+
+    // เริ่มต้นหน้าและโหลดตัวเลือก
+    document.addEventListener('DOMContentLoaded', () => {
+      // โหลด Quota
+      KMUTNB_DATA.quotas.forEach(q => {
+        const opt = document.createElement('option');
+        opt.value = q;
+        opt.textContent = q;
+        quotaSelect.appendChild(opt);
+      });
+
+      // โหลด Campus
+      KMUTNB_DATA.campuses.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.id;
+        opt.textContent = c.name;
+        campusSelect.appendChild(opt);
+      });
+
+      // โหลดข้อมูลเก่าที่เคยบันทึกไว้ใน LocalStorage
+      const saved = getApplicantData();
+      if (saved) {
+        if (saved.title) document.getElementById('title').value = saved.title;
+        if (saved.name) document.getElementById('fullName').value = saved.name;
+        if (saved.idCard) idCardInput.value = formatThaiID(saved.idCard);
+        if (saved.birthdate) document.getElementById('birthdate').value = saved.birthdate;
+        if (saved.phone) phoneInput.value = formatPhone(saved.phone);
+        if (saved.email) document.getElementById('email').value = saved.email;
+        if (saved.school) document.getElementById('school').value = saved.school;
+        if (saved.eduLevel) {
+          const eduSelect = document.getElementById('eduLevel');
+          if ([...eduSelect.options].some(o => o.value === saved.eduLevel)) {
+            eduSelect.value = saved.eduLevel;
+          } else if (saved.eduLevel.startsWith('ปวช')) {
+            eduSelect.value = 'ปวช';
+          } else if (saved.eduLevel.startsWith('ปวส')) {
+            eduSelect.value = 'ปวส';
+          } else if (saved.eduLevel.startsWith('ม.6')) {
+            eduSelect.value = 'ม.6';
+          } else if (saved.eduLevel.startsWith('ม.3')) {
+            eduSelect.value = 'ม.3';
+          } else if (saved.eduLevel.includes('ปริญญาตรีสำหรับสมัครปริญญาโท')) {
+            eduSelect.value = 'ปริญญาตรีสำหรับสมัครปริญญาโท';
+          } else if (saved.eduLevel.includes('อนุปริญญา')) {
+            eduSelect.value = 'อนุปริญญา';
+          } else if (saved.eduLevel.includes('ปริญญาตรี')) {
+            eduSelect.value = 'ปริญญาตรี';
+          }
+        }
+        if (saved.gpax) document.getElementById('gpax').value = saved.gpax;
+        if (saved.quota) quotaSelect.value = saved.quota;
+
+        // เลือกล่วงหน้าตามที่บันทึก
+        if (saved.campus && saved.campus.includes('ปราจีนบุรี')) {
+          campusSelect.value = 'prachin';
+        } else if (saved.campus && saved.campus.includes('ระยอง')) {
+          campusSelect.value = 'rayong';
+        } else {
+          campusSelect.value = 'prachin'; // ค่าเริ่มต้น มจพ. ปราจีนบุรี (FITM)
+        }
+      } else {
+        campusSelect.value = 'prachin';
+      }
+
+      onCampusChange();
+
+      if (saved && saved.faculty) {
+        facultySelect.value = saved.faculty;
+        onFacultyChange();
+        if (saved.major) {
+          majorSelect.value = saved.major;
+        }
+      }
+    });
+
+    // เมื่อเปลี่ยนวิทยาเขต ให้เปลี่ยนคณะ
+    function onCampusChange() {
+      const selectedCampusId = campusSelect.value;
+      const campusObj = KMUTNB_DATA.campuses.find(c => c.id === selectedCampusId);
+      
+      facultySelect.innerHTML = '';
+      if (campusObj) {
+        campusObj.faculties.forEach(f => {
+          const opt = document.createElement('option');
+          opt.value = f.name;
+          opt.textContent = f.name;
+          facultySelect.appendChild(opt);
+        });
+      }
+      onFacultyChange();
+    }
+
+    // เมื่อเปลี่ยนคณะ ให้เปลี่ยนสาขาวิชา
+    function onFacultyChange() {
+      const selectedCampusId = campusSelect.value;
+      const campusObj = KMUTNB_DATA.campuses.find(c => c.id === selectedCampusId);
+      const selectedFacultyName = facultySelect.value;
+
+      majorSelect.innerHTML = '';
+      if (campusObj) {
+        const facultyObj = campusObj.faculties.find(f => f.name === selectedFacultyName);
+        if (facultyObj) {
+          facultyObj.majors.forEach(m => {
+            const opt = document.createElement('option');
+            opt.value = m;
+            opt.textContent = m;
+            majorSelect.appendChild(opt);
+          });
+        }
+      }
+    }
+
+    // จัดฟอร์แมตเลขบัตรประชาชน
+    idCardInput.addEventListener('input', (e) => {
+      const raw = e.target.value.replace(/[^0-9]/g, '');
+      e.target.value = formatThaiID(raw);
+      document.getElementById('fieldIdCard').classList.remove('has-error');
+    });
+
+    // จัดฟอร์แมตเบอร์โทรศัพท์
+    phoneInput.addEventListener('input', (e) => {
+      const raw = e.target.value.replace(/[^0-9]/g, '');
+      e.target.value = formatPhone(raw);
+      document.getElementById('fieldPhone').classList.remove('has-error');
+    });
+
+    // บันทึกฟอร์มและตรวจสอบ
+    function handleRegisterSubmit(e) {
+      e.preventDefault();
+
+      const rawId = idCardInput.value.replace(/[^0-9]/g, '');
+      const rawPhone = phoneInput.value.replace(/[^0-9]/g, '');
+      const gpaxVal = parseFloat(document.getElementById('gpax').value);
+
+      let hasError = false;
+
+      // ตรวจเลขบัตรประชาชน
+      if (rawId.length !== 13 || !isValidThaiID(rawId)) {
+        document.getElementById('fieldIdCard').classList.add('has-error');
+        document.getElementById('idCardError').textContent = 'เลขประจำตัวประชาชน 13 หลักไม่ถูกต้องตามรูปแบบ';
+        hasError = true;
+      }
+
+      // ตรวจเบอร์โทร
+      if (rawPhone.length < 9) {
+        document.getElementById('fieldPhone').classList.add('has-error');
+        hasError = true;
+      }
+
+      // ตรวจ GPAX
+      if (isNaN(gpaxVal) || gpaxVal < 0 || gpaxVal > 4.0) {
+        document.getElementById('fieldGpax').classList.add('has-error');
+        hasError = true;
+      }
+
+      if (hasError) {
+        showToast('กรุณาตรวจสอบข้อมูลที่ระบุให้ถูกต้องครบถ้วน', 'error');
+        return;
+      }
+
+      // หาชื่อวิทยาเขตแบบเต็ม
+      const campusObj = KMUTNB_DATA.campuses.find(c => c.id === campusSelect.value);
+      const campusName = campusObj ? campusObj.name : campusSelect.value;
+
+      const applicantData = {
+        title: document.getElementById('title').value,
+        name: document.getElementById('fullName').value.trim(),
+        idCard: rawId,
+        birthdate: document.getElementById('birthdate').value,
+        phone: formatPhone(rawPhone),
+        email: document.getElementById('email').value.trim(),
+        school: document.getElementById('school').value.trim(),
+        eduLevel: document.getElementById('eduLevel').value,
+        gpax: gpaxVal.toFixed(2),
+        quota: quotaSelect.value,
+        campus: campusName,
+        faculty: facultySelect.value,
+        major: majorSelect.value,
+        statusStep: 1, // ขั้นตอนต่อไป
+        statusTitle: "รออัปโหลดและตรวจสอบเอกสาร"
+      };
+
+      saveApplicantData(applicantData);
+      showToast('บันทึกข้อมูลส่วนตัวเรียบร้อย กำลังไปหน้าอัปโหลดเอกสาร...', 'success');
+
+      setTimeout(() => {
+        location.href = 'upload.html';
+      }, 600);
+    }
+  </script>
+</body>
+</html>

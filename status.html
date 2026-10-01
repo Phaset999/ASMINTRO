@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>สถานะการสมัคร | ระบบรับสมัครนักศึกษาใหม่ มจพ.</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Top App Header -->
+  <header class="app-header">
+    <div class="brand" onclick="location.href='index.html'" style="cursor:pointer;">
+      <img src="logo.png" alt="โลโก้ มจพ.">
+      <div class="brand-text">
+        <div class="th">มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ</div>
+        <div class="en">ระบบรับสมัครนักศึกษาใหม่ (New Student Admission System)</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="user-chip">
+        <div class="user-avatar" id="headerAvatar">พ</div>
+        <div class="user-meta">
+          <div class="name" id="headerName">พาส ปรีดา</div>
+          <div class="role">ผู้สมัครนักเรียนใหม่</div>
+        </div>
+      </div>
+      <a href="login.html" class="logout">ออกจากระบบ</a>
+    </div>
+  </header>
+
+  <main class="page-shell">
+
+    <!-- แถบจำลองสถานะสำหรับนำเสนออาจารย์ (Interactive Demo Switcher) -->
+    <div class="demo-toolbar">
+      <div class="demo-title">
+        <span>⚙️</span>
+        <span>แถบจำลองสถานะสำหรับนำเสนอ (Presentation Demo Controls):</span>
+      </div>
+      <div class="demo-buttons">
+        <button type="button" class="btn-demo" onclick="simulateStatus(1, this)">1. รอตรวจสอบเอกสาร</button>
+        <button type="button" class="btn-demo active" onclick="simulateStatus(2, this)">2. เอกสารผ่านแล้ว</button>
+        <button type="button" class="btn-demo" onclick="simulateStatus('rejected', this)">3. เอกสารไม่สมบูรณ์ (แจ้งเตือน)</button>
+        <button type="button" class="btn-demo" onclick="simulateStatus(3, this)">4. มีสิทธิ์สอบสัมภาษณ์</button>
+        <button type="button" class="btn-demo" onclick="simulateStatus(4, this)">5. ผ่านการคัดเลือก (ตัวจริง)</button>
+      </div>
+    </div>
+
+    <!-- กล่องประกาศสถานะปัจจุบัน -->
+    <div class="alert-banner" id="statusAlert">
+      <span class="icon" id="alertIcon">!</span>
+      <span id="alertText">ประกาศ: เอกสารของท่านได้รับการอนุมัติแล้ว อยู่ในขั้นตอนรอประกาศผลการคัดเลือก กรุณาติดตามผลในเร็ว ๆ นี้</span>
+    </div>
+
+    <!-- Stepper Timeline -->
+    <section class="card">
+      <h2 class="timeline-title">สถานะการดำเนินการปัจจุบัน (Application Timeline)</h2>
+
+      <div class="timeline" id="timelineContainer">
+        <div class="tl-step done" id="tl_step1">
+          <div class="tl-dot"></div>
+          <div class="tl-label">1. ส่งเอกสารสำเร็จ</div>
+          <div class="tl-date" id="tl_date1">10 ม.ค. 2570</div>
+        </div>
+        <div class="tl-step current" id="tl_step2">
+          <div class="tl-dot"></div>
+          <div class="tl-label">2. ตรวจสอบเอกสารแล้ว</div>
+          <div class="tl-date" id="tl_date2">12 ม.ค. 2570</div>
+        </div>
+        <div class="tl-step" id="tl_step3">
+          <div class="tl-dot"></div>
+          <div class="tl-label">3. รอประกาศผลคัดเลือก</div>
+          <div class="tl-date" id="tl_date3">คาดว่า 30 ม.ค. 2570</div>
+        </div>
+        <div class="tl-step" id="tl_step4">
+          <div class="tl-dot"></div>
+          <div class="tl-label">4. ผ่านการคัดเลือก</div>
+          <div class="tl-date" id="tl_date4">รอประกาศผล</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ส่วนหัวเฉพาะตอนสั่งพิมพ์ A4 (@media print) -->
+    <div class="print-only-header" style="display:none;">
+      <img src="logo.png" alt="ตราสัญลักษณ์ มจพ.">
+      <div>
+        <div class="print-title-th">ใบสมัครเข้าศึกษาต่อระดับปริญญาตรี ประจำปีการศึกษา 2570</div>
+        <div class="print-title-sub">มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ (King Mongkut's University of Technology North Bangkok)</div>
+      </div>
+    </div>
+
+    <!-- ข้อมูลสรุปใบสมัคร -->
+    <section class="card summary-section-print">
+      <div class="summary-card">
+        <div class="summary-photo-wrap">
+          <div class="summary-photo" id="summaryPhoto">👤</div>
+          <span class="complete-badge" id="badgeComplete">✓ ข้อมูลสมบูรณ์</span>
+          <span class="status-pill ok" id="badgePayment" style="margin-top:4px;">✓ ชำระเงินแล้ว</span>
+        </div>
+
+        <div class="summary-body">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:10px;">
+            <div>
+              <h3 id="appNumberText" style="margin:0 0 4px; font-size:17px; color:var(--maroon-900);">ใบสมัครเลขที่: Admission-2027-004381</h3>
+              <p class="app-date" id="applyDateText" style="margin:0 0 16px;">บันทึกข้อมูลสมัครเมื่อวันที่ 10 มกราคม 2570 - 14:32 น.</p>
+            </div>
+            <div style="display:flex; gap:8px;">
+              <button type="button" class="btn btn-outline" style="padding:7px 14px; font-size:12.5px;" onclick="window.print()">🖨️ พิมพ์ใบสมัคร (PDF)</button>
+              <button type="button" class="btn btn-primary" id="btnPay" style="padding:7px 14px; font-size:12.5px;" onclick="openPaymentModal()">💳 ชำระเงิน / ดูใบเสร็จ</button>
+            </div>
+          </div>
+
+          <dl class="summary-grid">
+            <div>
+              <dt>ชื่อ-นามสกุล ผู้สมัคร</dt>
+              <dd id="viewName">พาส ปรีดา</dd>
+            </div>
+            <div>
+              <dt>เลขประจำตัวประชาชน</dt>
+              <dd id="viewIdCard">1-2345-67890-12-3</dd>
+            </div>
+            <div>
+              <dt>โครงการ / รอบการสมัคร</dt>
+              <dd id="viewQuota" style="color:var(--red-600);">TCAS รอบที่ 1 - Portfolio</dd>
+            </div>
+            <div>
+              <dt>วิทยาเขตที่สมัคร</dt>
+              <dd id="viewCampus">วิทยาเขตปราจีนบุรี</dd>
+            </div>
+            <div>
+              <dt>คณะที่สมัคร</dt>
+              <dd id="viewFaculty">คณะเทคโนโลยีและการจัดการอุตสาหกรรม (FITM)</dd>
+            </div>
+            <div>
+              <dt>สาขาวิชา / หลักสูตร</dt>
+              <dd id="viewMajor">วิศวกรรมสารสนเทศและเครือข่าย (INET)</dd>
+            </div>
+            <div>
+              <dt>โรงเรียน / สถานศึกษาเดิม</dt>
+              <dd id="viewSchool">วิทยาลัยนครสิงห์บุรี</dd>
+            </div>
+            <div>
+              <dt>วุฒิการศึกษา / แผนการเรียน</dt>
+              <dd id="viewEduLevel">ปวช</dd>
+            </div>
+            <div>
+              <dt>เกรดเฉลี่ยสะสม (GPAX)</dt>
+              <dd id="viewGpax" style="color:var(--green-700); font-size:15px;">3.85</dd>
+            </div>
+            <div>
+              <dt>เบอร์โทรศัพท์ติดต่อ</dt>
+              <dd id="viewPhone">089-1234567</dd>
+            </div>
+          </dl>
+
+          <!-- ส่วนลายเซ็นเฉพาะตอนสั่งพิมพ์ใบสมัคร A4 -->
+          <div class="print-signatures" style="display:none;">
+            <div class="print-sign-box">
+              <div class="print-sign-line"></div>
+              <div>ลงชื่อ .....................................................</div>
+              <div>( <span id="signName">พาส ปรีดา</span> )</div>
+              <div style="font-size:10pt; color:#666;">ผู้สมัครเข้าศึกษา</div>
+            </div>
+            <div class="print-sign-box">
+              <div class="print-sign-line"></div>
+              <div>ลงชื่อ .....................................................</div>
+              <div>( ..................................................... )</div>
+              <div style="font-size:10pt; color:#666;">นายทะเบียน / เจ้าหน้าที่รับสมัคร มจพ.</div>
+            </div>
+          </div>
+
+          <div style="margin-top:24px; padding-top:16px; border-top:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+            <div style="font-size:12px; color:var(--ink-500);">
+              หากต้องการแก้ไขเอกสารหรือข้อมูลส่วนตัว สามารถดำเนินการได้ก่อนปิดรับสมัคร
+            </div>
+            <div>
+              <a href="upload.html" class="btn btn-outline" style="font-size:12px; padding:6px 14px;">แก้ไขเอกสารที่อัปโหลด</a>
+              <a href="register.html" class="btn btn-outline" style="font-size:12px; padding:6px 14px; margin-left:6px;">แก้ไขข้อมูลผู้สมัคร</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Modal สำหรับชำระเงิน QR Code PromptPay -->
+  <div class="modal-overlay" id="paymentModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">ชำระค่าธรรมเนียมการสมัคร มจพ.</h3>
+        <button type="button" class="modal-close" onclick="closePaymentModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="qr-box">
+          <div style="font-weight:700; font-size:14px; margin-bottom:10px;">สแกน QR Code ผ่าน Mobile Banking ทุกธนาคาร</div>
+          
+          <div class="qr-frame">
+            <!-- SVG QR Code จำลองสวยงามแบบ Pure CSS/SVG -->
+            <svg viewBox="0 0 100 100" fill="#26232a">
+              <rect x="5" y="5" width="25" height="25" fill="#a91e2c"/>
+              <rect x="10" y="10" width="15" height="15" fill="#ffffff"/>
+              <rect x="13" y="13" width="9" height="9" fill="#a91e2c"/>
+
+              <rect x="70" y="5" width="25" height="25" fill="#a91e2c"/>
+              <rect x="75" y="10" width="15" height="15" fill="#ffffff"/>
+              <rect x="78" y="13" width="9" height="9" fill="#a91e2c"/>
+
+              <rect x="5" y="70" width="25" height="25" fill="#a91e2c"/>
+              <rect x="10" y="75" width="15" height="15" fill="#ffffff"/>
+              <rect x="13" y="78" width="9" height="9" fill="#a91e2c"/>
+
+              <!-- Patterns -->
+              <rect x="36" y="8" width="6" height="6"/>
+              <rect x="48" y="8" width="8" height="6"/>
+              <rect x="36" y="20" width="12" height="6"/>
+              <rect x="54" y="20" width="8" height="6"/>
+              
+              <rect x="8" y="38" width="6" height="10"/>
+              <rect x="20" y="38" width="8" height="6"/>
+              <rect x="36" y="36" width="10" height="10"/>
+              <rect x="52" y="36" width="14" height="6"/>
+              <rect x="72" y="38" width="8" height="6"/>
+              <rect x="86" y="38" width="6" height="10"/>
+
+              <rect x="36" y="52" width="6" height="14"/>
+              <rect x="48" y="50" width="12" height="8"/>
+              <rect x="66" y="52" width="8" height="8"/>
+              <rect x="80" y="54" width="12" height="6"/>
+
+              <rect x="36" y="72" width="10" height="8"/>
+              <rect x="52" y="70" width="8" height="12"/>
+              <rect x="66" y="76" width="12" height="6"/>
+              <rect x="84" y="70" width="8" height="12"/>
+              <rect x="42" y="86" width="14" height="6"/>
+              <rect x="62" y="86" width="8" height="6"/>
+              <rect x="76" y="86" width="14" height="6"/>
+            </svg>
+          </div>
+
+          <div class="qr-amount">500.00 บาท</div>
+          <div class="qr-note">ชื่อบัญชี: มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ (กองทุนรับสมัครนักศึกษา)</div>
+        </div>
+
+        <dl class="payment-meta">
+          <div>
+            <dt>เลขอ้างอิง 1 (Ref 1)</dt>
+            <dd id="payRef1">1234567890123</dd>
+          </div>
+          <div>
+            <dt>เลขอ้างอิง 2 (Ref 2)</dt>
+            <dd id="payRef2">2027004381</dd>
+          </div>
+          <div>
+            <dt>ธนาคารปลายทาง</dt>
+            <dd>กรุงไทย (KTB) / พร้อมเพย์</dd>
+          </div>
+          <div>
+            <dt>กำหนดชำระภายใน</dt>
+            <dd style="color:var(--red-600);">25 ม.ค. 2570 (23:59 น.)</dd>
+          </div>
+        </dl>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" onclick="closePaymentModal()">ปิด</button>
+        <button type="button" class="btn btn-primary" onclick="confirmPayment()">✓ ยืนยันการชำระเงินแล้ว</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    // โหลดข้อมูลผู้สมัครจาก LocalStorage
+    document.addEventListener('DOMContentLoaded', () => {
+      loadApplicantSummary();
+    });
+
+    function loadApplicantSummary() {
+      const data = getApplicantData();
+      if (!data) return;
+
+      // หัวหน้าและรูป
+      const fullName = (data.title || '') + ' ' + (data.name || 'พาส ปรีดา');
+      document.getElementById('headerName').textContent = data.name || 'พาส ปรีดา';
+      document.getElementById('headerAvatar').textContent = (data.name || 'พ').charAt(0);
+      document.getElementById('viewName').textContent = fullName.trim();
+      document.getElementById('signName').textContent = fullName.trim();
+
+      // ข้อมูลทั่วไป
+      document.getElementById('viewIdCard').textContent = formatThaiID(data.idCard);
+      document.getElementById('viewQuota').textContent = data.quota || 'TCAS รอบที่ 1 - Portfolio';
+      document.getElementById('viewCampus').textContent = data.campus || 'วิทยาเขตปราจีนบุรี';
+      document.getElementById('viewFaculty').textContent = data.faculty || 'คณะเทคโนโลยีและการจัดการอุตสาหกรรม (FITM)';
+      document.getElementById('viewMajor').textContent = data.major || 'วิศวกรรมสารสนเทศและเครือข่าย (INET)';
+      document.getElementById('viewSchool').textContent = data.school || 'วิทยาลัยนครสิงห์บุรี';
+      document.getElementById('viewEduLevel').textContent = data.eduLevel || 'ปวช';
+      document.getElementById('viewGpax').textContent = data.gpax ? parseFloat(data.gpax).toFixed(2) : '3.85';
+      document.getElementById('viewPhone').textContent = data.phone || '089-1234567';
+
+      if (data.appNumber) {
+        document.getElementById('appNumberText').textContent = `ใบสมัครเลขที่: ${data.appNumber}`;
+      }
+      if (data.applyDate) {
+        document.getElementById('applyDateText').textContent = `บันทึกข้อมูลสมัครเมื่อวันที่ ${data.applyDate}`;
+      }
+
+      // เลขอ้างอิงชำระเงิน
+      document.getElementById('payRef1').textContent = data.idCard || '1234567890123';
+      document.getElementById('payRef2').textContent = (data.appNumber || '2027004381').replace(/[^0-9]/g, '');
+
+      // เช็คการชำระเงิน
+      updatePaymentUI(data.isPaid);
+
+      // โหลดรูปถ้ามีการอัปโหลดรูปภาพไว้
+      try {
+        const uploads = JSON.parse(localStorage.getItem('kmutnb_uploads') || '{}');
+        if (uploads.photo && uploads.photo.previewUrl) {
+          const photoBox = document.getElementById('summaryPhoto');
+          photoBox.innerHTML = `<img src="${uploads.photo.previewUrl}" alt="รูปถ่ายผู้สมัคร" style="width:100%; height:100%; object-fit:cover; border-radius:7px;">`;
+        }
+      } catch (e) {}
+
+      // ปรับแต่งสถานะตาม Step ปัจจุบัน
+      if (data.statusStep) {
+        updateTimelineUI(data.statusStep);
+      }
+    }
+
+    function updatePaymentUI(isPaid) {
+      const badge = document.getElementById('badgePayment');
+      const btnPay = document.getElementById('btnPay');
+      if (isPaid) {
+        badge.className = 'status-pill ok';
+        badge.textContent = '✓ ชำระเงินเรียบร้อย';
+        btnPay.textContent = '🧾 ดูใบเสร็จชำระเงิน';
+        btnPay.className = 'btn btn-outline';
+      } else {
+        badge.className = 'status-pill pending';
+        badge.textContent = '● ยังไม่ชำระค่าสมัคร';
+        btnPay.textContent = '💳 ชำระเงินค่าสมัคร 500 บ.';
+        btnPay.className = 'btn btn-primary';
+      }
+    }
+
+    function openPaymentModal() {
+      document.getElementById('paymentModal').classList.add('active');
+    }
+
+    function closePaymentModal() {
+      document.getElementById('paymentModal').classList.remove('active');
+    }
+
+    function confirmPayment() {
+      saveApplicantData({ isPaid: true });
+      updatePaymentUI(true);
+      closePaymentModal();
+      showToast('ยืนยันการชำระเงินสำเร็จแล้ว ระบบได้ปรับปรุงสถานะเรียบร้อย', 'success');
+    }
+
+    // ฟังก์ชันจำลองเปลี่ยนสถานะสำหรับพรีเซนต์ให้อาจารย์ดู
+    function simulateStatus(mode, btn) {
+      // ปรับปุ่ม active
+      document.querySelectorAll('.btn-demo').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+
+      const alertBanner = document.getElementById('statusAlert');
+      const alertIcon = document.getElementById('alertIcon');
+      const alertText = document.getElementById('alertText');
+
+      if (mode === 1) {
+        // รอตรวจสอบ
+        updateTimelineUI(1);
+        alertBanner.style.background = 'var(--amber-50)';
+        alertBanner.style.borderColor = '#f59e0b';
+        alertBanner.style.color = 'var(--amber-700)';
+        alertIcon.style.background = '#f59e0b';
+        alertIcon.textContent = '⏳';
+        alertText.innerHTML = '<strong>สถานะปัจจุบัน:</strong> ใบสมัครและเอกสารของท่านถูกส่งเข้าระบบเรียบร้อยแล้ว อยู่ระหว่างเจ้าหน้าที่สำนักส่งเสริมวิชาการฯ ตรวจสอบความถูกต้อง';
+        showToast('จำลองสถานะ: รอตรวจสอบเอกสาร', 'info');
+      } else if (mode === 2) {
+        // เอกสารผ่านแล้ว
+        updateTimelineUI(2);
+        alertBanner.style.background = 'var(--green-50)';
+        alertBanner.style.borderColor = '#86efac';
+        alertBanner.style.color = 'var(--green-700)';
+        alertIcon.style.background = 'var(--green-700)';
+        alertIcon.textContent = '✓';
+        alertText.innerHTML = '<strong>ประกาศ:</strong> เอกสารของท่านได้รับการอนุมัติแล้ว อยู่ในขั้นตอนรอประกาศผลการคัดเลือก กรุณาติดตามผลในเร็ว ๆ นี้';
+        showToast('จำลองสถานะ: เอกสารผ่านการตรวจสอบแล้ว', 'success');
+      } else if (mode === 'rejected') {
+        // เอกสารไม่สมบูรณ์
+        updateTimelineUI(1);
+        alertBanner.style.background = '#fff1f2';
+        alertBanner.style.borderColor = '#fca5a5';
+        alertBanner.style.color = '#991b1b';
+        alertIcon.style.background = '#dc2626';
+        alertIcon.textContent = '✕';
+        alertText.innerHTML = '<strong>แจ้งเตือนด่วน:</strong> เอกสาร "ใบแสดงผลการเรียน (Transcript)" ไม่ชัดเจนหรือไม่สมบูรณ์ กรุณา <a href="upload.html" style="text-decoration:underline; font-weight:bold; color:#dc2626;">คลิกที่นี่เพื่ออัปโหลดเอกสารใหม่</a> ภายในวันที่ 25 ม.ค. 2570';
+        showToast('จำลองสถานะ: เอกสารมีข้อผิดพลาด ต้องอัปโหลดใหม่', 'error');
+      } else if (mode === 3) {
+        // มีสิทธิ์สอบสัมภาษณ์
+        updateTimelineUI(3);
+        alertBanner.style.background = '#eff6ff';
+        alertBanner.style.borderColor = '#93c5fd';
+        alertBanner.style.color = '#1e40af';
+        alertIcon.style.background = '#2563eb';
+        alertIcon.textContent = '🎓';
+        alertText.innerHTML = '<strong>ยินดีด้วย!</strong> ท่านผ่านการคัดเลือกรอบแรกและมีสิทธิ์สอบสัมภาษณ์ กำหนดการสอบสัมภาษณ์วันที่ 2 กุมภาพันธ์ 2570 เวลา 09:00 น. ณ อาคารปฏิบัติการ คณะที่สมัคร';
+        showToast('จำลองสถานะ: มีสิทธิ์สอบสัมภาษณ์', 'info');
+      } else if (mode === 4) {
+        // ผ่านการคัดเลือกตัวจริง
+        updateTimelineUI(4);
+        alertBanner.style.background = 'var(--green-50)';
+        alertBanner.style.borderColor = '#86efac';
+        alertBanner.style.color = 'var(--green-700)';
+        alertIcon.style.background = 'var(--green-700)';
+        alertIcon.textContent = '🎉';
+        alertText.innerHTML = '<strong>ขอแสดงความยินดี! ท่านผ่านการคัดเลือกเข้าเป็นนักศึกษาใหม่ มจพ. ประจำปีการศึกษา 2570</strong> กรุณาเข้าระบบ myTCAS เพื่อยืนยันสิทธิ์ระหว่างวันที่ 6 - 7 ก.พ. 2570';
+        showToast('จำลองสถานะ: ผ่านการคัดเลือกเป็นนักศึกษาใหม่', 'success');
+      }
+    }
+
+    function updateTimelineUI(stepNum) {
+      const steps = [
+        document.getElementById('tl_step1'),
+        document.getElementById('tl_step2'),
+        document.getElementById('tl_step3'),
+        document.getElementById('tl_step4')
+      ];
+
+      steps.forEach((el, index) => {
+        const curStep = index + 1;
+        el.className = 'tl-step';
+        if (curStep < stepNum) {
+          el.classList.add('done');
+        } else if (curStep === stepNum) {
+          el.classList.add('current');
+        }
+      });
+    }
+  </script>
+</body>
+</html>
