@@ -9,13 +9,13 @@
 <body>
 
   <header class="app-header">
-    <div class="brand" onclick="location.href='index.html'" style="cursor:pointer;">
+    <a href="index.html" class="brand" style="text-decoration:none;">
       <img src="logo.png" alt="โลโก้ มจพ.">
       <div class="brand-text">
         <div class="th">มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ</div>
         <div class="en">ระบบรับสมัครนักศึกษาใหม่ (New Student Admission System)</div>
       </div>
-    </div>
+    </a>
     <div class="header-right">
       <div class="user-chip">
         <div class="user-avatar">พ</div>
@@ -49,7 +49,7 @@
       </div>
     </div>
 
-    <section class="card">
+    <form class="card" id="uploadForm" action="status.html" method="get">
       <div class="upload-intro">
         <h2>แบบเอกสารประกอบการสมัครหลักสูตร (TCAS Portfolio)</h2>
         <p>กรุณาอัปโหลดเอกสารให้ครบถ้วนตามรายการด้านล่าง รองรับไฟล์ PDF, JPG, PNG ขนาดไม่เกินที่กำหนด โดยระบบจะตรวจสอบความถูกต้องอัตโนมัติ</p>
@@ -60,13 +60,9 @@
         <div class="doc-info">
           <div class="doc-name">1. สำเนาบัตรประจำตัวประชาชน *</div>
           <div class="doc-hint">ไฟล์ลงลายมือชื่อรับรองสำเนาถูกต้อง ขนาดไม่เกิน 5MB (PDF/JPG/PNG)</div>
-          <div class="progress-bar-wrap" id="prog_idcard"><div class="progress-bar-fill"></div></div>
         </div>
         <div class="doc-status">
-          <span class="status-pill ok" id="pill_idcard">✓ เรียบร้อย - idcard_verified.pdf</span>
-          <button type="button" class="btn-sm green-outline" onclick="previewDoc('idcard')">ดูตัวอย่าง</button>
-          <button type="button" class="btn-sm red-solid" onclick="triggerFileInput('input_idcard')">อัปโหลดใหม่</button>
-          <input type="file" id="input_idcard" accept=".pdf,.jpg,.jpeg,.png" style="display:none;" onchange="handleFileChange(event, 'idcard', 'สำเนาบัตรประจำตัวประชาชน')">
+          <input type="file" id="input_idcard" name="idcard" accept=".pdf,.jpg,.jpeg,.png" class="doc-file-input">
         </div>
       </div>
 
@@ -75,13 +71,9 @@
         <div class="doc-info">
           <div class="doc-name">2. สำเนาทะเบียนบ้าน *</div>
           <div class="doc-hint">ไฟล์หน้าแรกและหน้าที่มีชื่อผู้สมัคร ขนาดไม่เกิน 5MB (PDF/JPG/PNG)</div>
-          <div class="progress-bar-wrap" id="prog_house"><div class="progress-bar-fill"></div></div>
         </div>
         <div class="doc-status">
-          <span class="status-pill pending" id="pill_house">● ยังไม่ได้อัปโหลด</span>
-          <button type="button" class="btn-sm green-outline" id="prev_house" style="display:none;" onclick="previewDoc('house')">ดูตัวอย่าง</button>
-          <button type="button" class="btn-sm red-solid" onclick="triggerFileInput('input_house')">เลือกไฟล์</button>
-          <input type="file" id="input_house" accept=".pdf,.jpg,.jpeg,.png" style="display:none;" onchange="handleFileChange(event, 'house', 'สำเนาทะเบียนบ้าน')">
+          <input type="file" id="input_house" name="house" accept=".pdf,.jpg,.jpeg,.png" class="doc-file-input">
         </div>
       </div>
 
@@ -90,13 +82,9 @@
         <div class="doc-info">
           <div class="doc-name">3. ใบแสดงผลการเรียน (Transcript 5 ภาคเรียน) *</div>
           <div class="doc-hint">เอกสารฉบับจริงหรือคัดสำเนา แสดง GPAX ชัดเจน ขนาดไม่เกิน 10MB (PDF)</div>
-          <div class="progress-bar-wrap" id="prog_transcript"><div class="progress-bar-fill"></div></div>
         </div>
         <div class="doc-status">
-          <span class="status-pill ok" id="pill_transcript">✓ เรียบร้อย - transcript_gpax.pdf</span>
-          <button type="button" class="btn-sm green-outline" onclick="previewDoc('transcript')">ดูตัวอย่าง</button>
-          <button type="button" class="btn-sm red-solid" onclick="triggerFileInput('input_transcript')">อัปโหลดใหม่</button>
-          <input type="file" id="input_transcript" accept=".pdf,.jpg,.jpeg,.png" style="display:none;" onchange="handleFileChange(event, 'transcript', 'ใบแสดงผลการเรียน (Transcript)')">
+          <input type="file" id="input_transcript" name="transcript" accept=".pdf,.jpg,.jpeg,.png" class="doc-file-input">
         </div>
       </div>
 
@@ -105,13 +93,9 @@
         <div class="doc-info">
           <div class="doc-name">4. รูปถ่ายหน้าตรงผู้สมัคร (ไม่เกิน 6 เดือน) *</div>
           <div class="doc-hint">สวมชุดนักเรียน/ชุดนักศึกษา/ชุดสุภาพ ขนาดไม่เกิน 2MB (JPG/PNG)</div>
-          <div class="progress-bar-wrap" id="prog_photo"><div class="progress-bar-fill"></div></div>
         </div>
         <div class="doc-status">
-          <span class="status-pill pending" id="pill_photo">● ยังไม่ได้อัปโหลด</span>
-          <button type="button" class="btn-sm green-outline" id="prev_photo" style="display:none;" onclick="previewDoc('photo')">ดูตัวอย่าง</button>
-          <button type="button" class="btn-sm red-solid" onclick="triggerFileInput('input_photo')">เลือกไฟล์</button>
-          <input type="file" id="input_photo" accept=".jpg,.jpeg,.png" style="display:none;" onchange="handleFileChange(event, 'photo', 'รูปถ่ายหน้าตรงผู้สมัคร')">
+          <input type="file" id="input_photo" name="photo" accept=".jpg,.jpeg,.png" class="doc-file-input">
         </div>
       </div>
 
@@ -120,217 +104,19 @@
         <div class="doc-info">
           <div class="doc-name">5. แฟ้มสะสมผลงาน (Portfolio ไม่เกิน 10 หน้า) *</div>
           <div class="doc-hint">รวมผลงาน รางวัล หรือใบประกาศนียบัตรที่ตรงกับสาขาที่สมัคร ขนาดไม่เกิน 15MB (PDF)</div>
-          <div class="progress-bar-wrap" id="prog_portfolio"><div class="progress-bar-fill"></div></div>
         </div>
         <div class="doc-status">
-          <span class="status-pill ok" id="pill_portfolio">✓ เรียบร้อย - portfolio_kmutnb.pdf</span>
-          <button type="button" class="btn-sm green-outline" onclick="previewDoc('portfolio')">ดูตัวอย่าง</button>
-          <button type="button" class="btn-sm red-solid" onclick="triggerFileInput('input_portfolio')">อัปโหลดใหม่</button>
-          <input type="file" id="input_portfolio" accept=".pdf" style="display:none;" onchange="handleFileChange(event, 'portfolio', 'แฟ้มสะสมผลงาน Portfolio')">
+          <input type="file" id="input_portfolio" name="portfolio" accept=".pdf" class="doc-file-input">
         </div>
       </div>
 
       <div class="upload-actions">
-        <button type="button" class="btn btn-outline" onclick="location.href='register.html'">← ย้อนกลับแก้ไขข้อมูล</button>
-        <button type="button" class="btn btn-primary" onclick="submitDocuments()">ส่งเอกสารเข้ารับการตรวจสอบ →</button>
+        <a href="register.html" class="btn btn-outline" style="text-decoration:none; display:inline-flex; align-items:center;">← ย้อนกลับแก้ไขข้อมูล</a>
+        <button type="submit" class="btn btn-primary">ส่งเอกสารเข้ารับการตรวจสอบ →</button>
       </div>
-    </section>
+    </form>
 
   </main>
 
-  <!-- Modal สำหรับดูตัวอย่างเอกสาร (Pure CSS/JS) -->
-  <div class="modal-overlay" id="previewModal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3 class="modal-title" id="previewTitle">ตัวอย่างเอกสาร</h3>
-        <button type="button" class="modal-close" onclick="closeModal()">×</button>
-      </div>
-      <div class="modal-body" id="previewBody">
-        <!-- แสดงเนื้อหาภาพหรือ PDF Placeholder ตามที่เลือก -->
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline" onclick="closeModal()">ปิดหน้าต่าง</button>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // จัดเก็บสถานะเอกสารในตัวแปรและ LocalStorage
-    let uploadState = {
-      idcard: { uploaded: true, filename: 'idcard_verified.pdf', size: '1.2 MB', type: 'application/pdf', previewUrl: '' },
-      house: { uploaded: false, filename: '', size: '', type: '', previewUrl: '' },
-      transcript: { uploaded: true, filename: 'transcript_gpax.pdf', size: '2.4 MB', type: 'application/pdf', previewUrl: '' },
-      photo: { uploaded: false, filename: '', size: '', type: '', previewUrl: '' },
-      portfolio: { uploaded: true, filename: 'portfolio_kmutnb.pdf', size: '8.5 MB', type: 'application/pdf', previewUrl: '' }
-    };
-
-    // โหลดประวัติเอกสารจาก LocalStorage
-    document.addEventListener('DOMContentLoaded', () => {
-      try {
-        const saved = localStorage.getItem('kmutnb_uploads');
-        if (saved) {
-          uploadState = { ...uploadState, ...JSON.parse(saved) };
-        }
-      } catch (e) {}
-
-      // อัปเดต UI ตามข้อมูลที่บันทึก
-      Object.keys(uploadState).forEach(key => {
-        updateRowUI(key);
-      });
-    });
-
-    function triggerFileInput(id) {
-      document.getElementById(id).click();
-    }
-
-    function handleFileChange(event, key, title) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      // ตรวจขนาดไฟล์ (15 MB)
-      if (file.size > 15 * 1024 * 1024) {
-        showToast('ไฟล์มีขนาดเกิน 15MB กรุณาเลือกไฟล์ใหม่', 'error');
-        return;
-      }
-
-      // แสดงแถบ Progress Bar เคลื่อนไหว
-      const progWrap = document.getElementById(`prog_${key}`);
-      const progFill = progWrap.querySelector('.progress-bar-fill');
-      progWrap.classList.add('active');
-      progFill.style.width = '0%';
-
-      let width = 0;
-      const interval = setInterval(() => {
-        width += 25;
-        progFill.style.width = `${width}%`;
-        if (width >= 100) {
-          clearInterval(interval);
-          setTimeout(() => {
-            progWrap.classList.remove('active');
-            
-            // แปลงขนาดไฟล์ให้เป็น MB/KB สวยงาม
-            const sizeStr = file.size > 1024 * 1024 
-              ? (file.size / (1024 * 1024)).toFixed(1) + ' MB' 
-              : Math.round(file.size / 1024) + ' KB';
-
-            // ถ้าเป็นรูปภาพ ให้จำลอง Base64 ไว้พรีวิว
-            if (file.type.startsWith('image/')) {
-              const reader = new FileReader();
-              reader.onload = (e) => {
-                uploadState[key] = {
-                  uploaded: true,
-                  filename: file.name,
-                  size: sizeStr,
-                  type: file.type,
-                  previewUrl: e.target.result
-                };
-                saveUploads();
-                updateRowUI(key);
-              };
-              reader.readAsDataURL(file);
-            } else {
-              uploadState[key] = {
-                uploaded: true,
-                filename: file.name,
-                size: sizeStr,
-                type: file.type,
-                previewUrl: ''
-              };
-              saveUploads();
-              updateRowUI(key);
-            }
-
-            showToast(`อัปโหลด ${title} สำเร็จแล้ว`, 'success');
-          }, 300);
-        }
-      }, 70);
-    }
-
-    function updateRowUI(key) {
-      const data = uploadState[key];
-      const pill = document.getElementById(`pill_${key}`);
-      const prevBtn = document.getElementById(`prev_${key}`);
-
-      if (data && data.uploaded) {
-        pill.className = 'status-pill ok';
-        pill.textContent = `✓ เรียบร้อย - ${data.filename}`;
-        if (prevBtn) prevBtn.style.display = 'inline-block';
-      } else {
-        pill.className = 'status-pill pending';
-        pill.textContent = '● ยังไม่ได้อัปโหลด';
-        if (prevBtn) prevBtn.style.display = 'none';
-      }
-    }
-
-    function saveUploads() {
-      // บันทึกเฉพาะข้อมูลที่ไม่หนักเกินไป
-      const clean = {};
-      Object.keys(uploadState).forEach(k => {
-        clean[k] = {
-          uploaded: uploadState[k].uploaded,
-          filename: uploadState[k].filename,
-          size: uploadState[k].size,
-          type: uploadState[k].type,
-          previewUrl: uploadState[k].type.startsWith('image/') ? uploadState[k].previewUrl : ''
-        };
-      });
-      localStorage.setItem('kmutnb_uploads', JSON.stringify(clean));
-    }
-
-    function previewDoc(key) {
-      const doc = uploadState[key];
-      const modal = document.getElementById('previewModal');
-      const body = document.getElementById('previewBody');
-      const title = document.getElementById('previewTitle');
-
-      title.textContent = `ดูตัวอย่าง: ${doc.filename || 'เอกสารประกอบการสมัคร'}`;
-
-      if (doc.previewUrl) {
-        body.innerHTML = `
-          <div class="doc-preview-wrap">
-            <img src="${doc.previewUrl}" alt="ตัวอย่างเอกสาร" class="doc-preview-img">
-            <p style="margin-top:12px; font-size:12.5px; color:var(--ink-500);">ชื่อไฟล์: ${doc.filename} (${doc.size})</p>
-          </div>
-        `;
-      } else {
-        body.innerHTML = `
-          <div class="doc-preview-wrap">
-            <div class="pdf-placeholder">
-              <div class="pdf-icon">📄</div>
-              <div style="font-weight:700; font-size:15px; color:var(--ink-900);">${doc.filename || 'เอกสารที่อัปโหลด'}</div>
-              <div style="font-size:12.5px; color:var(--ink-500);">ชนิดเอกสาร: PDF Document | ขนาด: ${doc.size || '1.8 MB'}</div>
-              <div style="font-size:12px; color:var(--green-700); background:var(--green-50); padding:4px 12px; border-radius:12px; margin-top:6px;">✓ ผ่านการตรวจสอบความสมบูรณ์ของไฟล์แล้ว</div>
-            </div>
-          </div>
-        `;
-      }
-
-      modal.classList.add('active');
-    }
-
-    function closeModal() {
-      document.getElementById('previewModal').classList.remove('active');
-    }
-
-    function submitDocuments() {
-      // ตรวจสอบว่าอัปโหลดบัตรประชาชนและ Transcript แล้วหรือยัง
-      if (!uploadState.idcard.uploaded || !uploadState.transcript.uploaded) {
-        showToast('กรุณาอัปโหลดเอกสารสำคัญ (บัตรประชาชนและ Transcript) ให้เรียบร้อย', 'error');
-        return;
-      }
-
-      // บันทึกสถานะผู้สมัคร
-      saveApplicantData({
-        statusStep: 2,
-        statusTitle: "ตรวจสอบเอกสารแล้ว",
-        statusNote: "ประกาศ: เอกสารของท่านได้รับการอนุมัติแล้ว อยู่ในขั้นตอนรอประกาศผลการคัดเลือก กรุณาติดตามผลในเร็ว ๆ นี้"
-      });
-
-      showToast('ส่งเอกสารเข้ารับการตรวจสอบเรียบร้อยแล้ว!', 'success');
-      setTimeout(() => {
-        location.href = 'status.html';
-      }, 700);
-    }
-  </script>
 </body>
 </html>
