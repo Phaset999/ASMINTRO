@@ -14,7 +14,7 @@
   <div class="login-topbar">
     <a href="index.html" style="margin-right:auto; font-weight:600; display:flex; align-items:center; gap:6px;">← กลับหน้าแรก</a>
     <a href="index.html#faq">คู่มือการใช้งาน</a>
-    <button class="btn-header" onclick="location.href='register.html'">สมัครสมาชิกใหม่</button>
+    <a href="register.html" class="btn-header" style="color:#fff; text-decoration:none; display:inline-block;">สมัครสมาชิกใหม่</a>
   </div>
 
   <div class="login-wrap">
@@ -40,24 +40,22 @@
         <h2>เข้าสู่ระบบผู้สมัคร</h2>
         <p class="sub">กรุณากรอกเลขประจำตัวประชาชนและรหัสผ่านเพื่อดำเนินการต่อ</p>
 
-        <form action="status.html" method="get">
+        <form id="loginForm" action="status.html" method="get">
           <div class="field" id="citizenIdField">
             <label for="citizenId">เลขประจำตัวประชาชน (13 หลัก)</label>
-            <input type="text" id="citizenId" maxlength="17" placeholder="X-XXXX-XXXXX-XX-X" autocomplete="username">
-            <div class="field-error-text">กรุณากรอกเลขประจำตัวประชาชน 13 หลักให้ถูกต้อง</div>
+            <input type="text" id="citizenId" name="citizenId" maxlength="17" placeholder="กรอกเลขประจำตัวประชาชน 13 หลัก" autocomplete="username" required>
           </div>
 
           <div class="field" id="passwordField">
             <label for="password">รหัสผ่าน (Password)</label>
-            <input type="password" id="password" placeholder="กรอกรหัสผ่านของคุณ" autocomplete="current-password">
-            <div class="field-error-text">กรุณากรอกรหัสผ่าน</div>
+            <input type="password" id="password" name="password" placeholder="กรอกรหัสผ่านของคุณ" autocomplete="current-password" required>
           </div>
 
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; font-size:12.5px;">
             <label style="display:flex; align-items:center; gap:6px; cursor:pointer; color:var(--ink-700);">
-              <input type="checkbox" id="rememberMe" checked> จดจำการเข้าสู่ระบบ
+              <input type="checkbox" id="rememberMe" name="rememberMe" checked> จดจำการเข้าสู่ระบบ
             </label>
-            <a href="javascript:void(0)" onclick="forgotPasswordAlert()" style="color:var(--red-600);">ลืมรหัสผ่าน?</a>
+            <a href="#" style="color:var(--red-600);">ลืมรหัสผ่าน?</a>
           </div>
 
           <button type="submit" class="btn btn-primary">เข้าสู่ระบบ</button>
@@ -69,7 +67,5 @@
       </div>
     </div>
   </div>
-
-  
 </body>
 </html>

@@ -268,5 +268,175 @@
     </div>
   </div>
 
+  <script>
+    // โหลดข้อมูลผู้สมัครจาก LocalStorage
+    document.addEventListener('DOMContentLoaded', () => {
+      loadApplicantSummary();
+    });
+
+    function loadApplicantSummary() {
+      const data = getApplicantData();
+      if (!data) return;
+
+      // หัวหน้าและรูป
+      const fullName = (data.title || '') + ' ' + (data.name || 'พาส ปรีดา');
+      document.getElementById('headerName').textContent = data.name || 'พาส ปรีดา';
+      document.getElementById('headerAvatar').textContent = (data.name || 'พ').charAt(0);
+      document.getElementById('viewName').textContent = fullName.trim();
+      document.getElementById('signName').textContent = fullName.trim();
+
+      // ข้อมูลทั่วไป
+      document.getElementById('viewIdCard').textContent = formatThaiID(data.idCard);
+      document.getElementById('viewQuota').textContent = data.quota || 'TCAS รอบที่ 1 - Portfolio';
+      document.getElementById('viewCampus').textContent = data.campus || 'วิทยาเขตปราจีนบุรี';
+      document.getElementById('viewFaculty').textContent = data.faculty || 'คณะเทคโนโลยีและการจัดการอุตสาหกรรม (FITM)';
+      document.getElementById('viewMajor').textContent = data.major || 'วิศวกรรมสารสนเทศและเครือข่าย (INET)';
+      document.getElementById('viewSchool').textContent = data.school || 'วิทยาลัยนครสิงห์บุรี';
+      document.getElementById('viewEduLevel').textContent = data.eduLevel || 'ปวช';
+      document.getElementById('viewGpax').textContent = data.gpax ? parseFloat(data.gpax).toFixed(2) : '3.85';
+      document.getElementById('viewPhone').textContent = data.phone || '089-1234567';
+
+      if (data.appNumber) {
+        document.getElementById('appNumberText').textContent = `ใบสมัครเลขที่: ${data.appNumber}`;
+      }
+      if (data.applyDate) {
+        document.getElementById('applyDateText').textContent = `บันทึกข้อมูลสมัครเมื่อวันที่ ${data.applyDate}`;
+      }
+
+      // เลขอ้างอิงชำระเงิน
+      document.getElementById('payRef1').textContent = data.idCard || '1234567890123';
+      document.getElementById('payRef2').textContent = (data.appNumber || '2027004381').replace(/[^0-9]/g, '');
+
+      // เช็คการชำระเงิน
+      updatePaymentUI(data.isPaid);
+
+      // โหลดรูปถ้ามีการอัปโหลดรูปภาพไว้
+      try {
+        const uploads = JSON.parse(localStorage.getItem('kmutnb_uploads') || '{}');
+        if (uploads.photo && uploads.photo.previewUrl) {
+          const photoBox = document.getElementById('summaryPhoto');
+          photoBox.innerHTML = `<img src="${uploads.photo.previewUrl}" alt="รูปถ่ายผู้สมัคร" style="width:100%; height:100%; object-fit:cover; border-radius:7px;">`;
+        }
+      } catch (e) {}
+
+      // ปรับแต่งสถานะตาม Step ปัจจุบัน
+      if (data.statusStep) {
+        updateTimelineUI(data.statusStep);
+      }
+    }
+
+    function updatePaymentUI(isPaid) {
+      const badge = document.getElementById('badgePayment');
+      const btnPay = document.getElementById('btnPay');
+      if (isPaid) {
+        badge.className = 'status-pill ok';
+        badge.textContent = '✓ ชำระเงินเรียบร้อย';
+        btnPay.textContent = '🧾 ดูใบเสร็จชำระเงิน';
+        btnPay.className = 'btn btn-outline';
+      } else {
+        badge.className = 'status-pill pending';
+        badge.textContent = '● ยังไม่ชำระค่าสมัคร';
+        btnPay.textContent = '💳 ชำระเงินค่าสมัคร 500 บ.';
+        btnPay.className = 'btn btn-primary';
+      }
+    }
+
+    function openPaymentModal() {
+      document.getElementById('paymentModal').classList.add('active');
+    }
+
+    function closePaymentModal() {
+      document.getElementById('paymentModal').classList.remove('active');
+    }
+
+    function confirmPayment() {
+      saveApplicantData({ isPaid: true });
+      updatePaymentUI(true);
+      closePaymentModal();
+      showToast('ยืนยันการชำระเงินสำเร็จแล้ว ระบบได้ปรับปรุงสถานะเรียบร้อย', 'success');
+    }
+
+    // ฟังก์ชันจำลองเปลี่ยนสถานะสำหรับพรีเซนต์ให้อาจารย์ดู
+    function simulateStatus(mode, btn) {
+      // ปรับปุ่ม active
+      document.querySelectorAll('.btn-demo').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+
+      const alertBanner = document.getElementById('statusAlert');
+      const alertIcon = document.getElementById('alertIcon');
+      const alertText = document.getElementById('alertText');
+
+      if (mode === 1) {
+        // รอตรวจสอบ
+        updateTimelineUI(1);
+        alertBanner.style.background = 'var(--amber-50)';
+        alertBanner.style.borderColor = '#f59e0b';
+        alertBanner.style.color = 'var(--amber-700)';
+        alertIcon.style.background = '#f59e0b';
+        alertIcon.textContent = '⏳';
+        alertText.innerHTML = '<strong>สถานะปัจจุบัน:</strong> ใบสมัครและเอกสารของท่านถูกส่งเข้าระบบเรียบร้อยแล้ว อยู่ระหว่างเจ้าหน้าที่สำนักส่งเสริมวิชาการฯ ตรวจสอบความถูกต้อง';
+        showToast('จำลองสถานะ: รอตรวจสอบเอกสาร', 'info');
+      } else if (mode === 2) {
+        // เอกสารผ่านแล้ว
+        updateTimelineUI(2);
+        alertBanner.style.background = 'var(--green-50)';
+        alertBanner.style.borderColor = '#86efac';
+        alertBanner.style.color = 'var(--green-700)';
+        alertIcon.style.background = 'var(--green-700)';
+        alertIcon.textContent = '✓';
+        alertText.innerHTML = '<strong>ประกาศ:</strong> เอกสารของท่านได้รับการอนุมัติแล้ว อยู่ในขั้นตอนรอประกาศผลการคัดเลือก กรุณาติดตามผลในเร็ว ๆ นี้';
+        showToast('จำลองสถานะ: เอกสารผ่านการตรวจสอบแล้ว', 'success');
+      } else if (mode === 'rejected') {
+        // เอกสารไม่สมบูรณ์
+        updateTimelineUI(1);
+        alertBanner.style.background = '#fff1f2';
+        alertBanner.style.borderColor = '#fca5a5';
+        alertBanner.style.color = '#991b1b';
+        alertIcon.style.background = '#dc2626';
+        alertIcon.textContent = '✕';
+        alertText.innerHTML = '<strong>แจ้งเตือนด่วน:</strong> เอกสาร "ใบแสดงผลการเรียน (Transcript)" ไม่ชัดเจนหรือไม่สมบูรณ์ กรุณา <a href="upload.html" style="text-decoration:underline; font-weight:bold; color:#dc2626;">คลิกที่นี่เพื่ออัปโหลดเอกสารใหม่</a> ภายในวันที่ 25 ม.ค. 2570';
+        showToast('จำลองสถานะ: เอกสารมีข้อผิดพลาด ต้องอัปโหลดใหม่', 'error');
+      } else if (mode === 3) {
+        // มีสิทธิ์สอบสัมภาษณ์
+        updateTimelineUI(3);
+        alertBanner.style.background = '#eff6ff';
+        alertBanner.style.borderColor = '#93c5fd';
+        alertBanner.style.color = '#1e40af';
+        alertIcon.style.background = '#2563eb';
+        alertIcon.textContent = '🎓';
+        alertText.innerHTML = '<strong>ยินดีด้วย!</strong> ท่านผ่านการคัดเลือกรอบแรกและมีสิทธิ์สอบสัมภาษณ์ กำหนดการสอบสัมภาษณ์วันที่ 2 กุมภาพันธ์ 2570 เวลา 09:00 น. ณ อาคารปฏิบัติการ คณะที่สมัคร';
+        showToast('จำลองสถานะ: มีสิทธิ์สอบสัมภาษณ์', 'info');
+      } else if (mode === 4) {
+        // ผ่านการคัดเลือกตัวจริง
+        updateTimelineUI(4);
+        alertBanner.style.background = 'var(--green-50)';
+        alertBanner.style.borderColor = '#86efac';
+        alertBanner.style.color = 'var(--green-700)';
+        alertIcon.style.background = 'var(--green-700)';
+        alertIcon.textContent = '🎉';
+        alertText.innerHTML = '<strong>ขอแสดงความยินดี! ท่านผ่านการคัดเลือกเข้าเป็นนักศึกษาใหม่ มจพ. ประจำปีการศึกษา 2570</strong> กรุณาเข้าระบบ myTCAS เพื่อยืนยันสิทธิ์ระหว่างวันที่ 6 - 7 ก.พ. 2570';
+        showToast('จำลองสถานะ: ผ่านการคัดเลือกเป็นนักศึกษาใหม่', 'success');
+      }
+    }
+
+    function updateTimelineUI(stepNum) {
+      const steps = [
+        document.getElementById('tl_step1'),
+        document.getElementById('tl_step2'),
+        document.getElementById('tl_step3'),
+        document.getElementById('tl_step4')
+      ];
+
+      steps.forEach((el, index) => {
+        const curStep = index + 1;
+        el.className = 'tl-step';
+        if (curStep < stepNum) {
+          el.classList.add('done');
+        } else if (curStep === stepNum) {
+          el.classList.add('current');
+        }
+      });
+    }
+  </script>
 </body>
 </html>
