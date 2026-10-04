@@ -623,6 +623,18 @@ button{font-family:inherit;}
   background-color:#fff;
   box-shadow:0 0 0 3px var(--red-50);
 }
+.field select optgroup{
+  font-weight:700;
+  color:var(--maroon-800);
+  background:#f8f6f5;
+  padding:6px 4px;
+}
+.field select option{
+  font-weight:400;
+  color:var(--ink-900);
+  background:#ffffff;
+  padding:6px 10px;
+}
 .field.has-error input, .field.has-error select{
   border-color:#dc2626 !important;
   background-color:#fff8f8;
