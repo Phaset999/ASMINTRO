@@ -40,7 +40,7 @@
         <h2>เข้าสู่ระบบผู้สมัคร</h2>
         <p class="sub">กรุณากรอกเลขประจำตัวประชาชนและรหัสผ่านเพื่อดำเนินการต่อ</p>
 
-        <form id="loginForm" onsubmit="handleLogin(event)">
+        <form action="status.html" method="get">
           <div class="field" id="citizenIdField">
             <label for="citizenId">เลขประจำตัวประชาชน (13 หลัก)</label>
             <input type="text" id="citizenId" maxlength="17" placeholder="X-XXXX-XXXXX-XX-X" autocomplete="username">
@@ -70,63 +70,6 @@
     </div>
   </div>
 
-  <script>
-    const citizenInput = document.getElementById('citizenId');
-    const passwordInput = document.getElementById('password');
-
-    // โหลดข้อมูลเดิมถ้าเคยบันทึกไว้
-    window.addEventListener('DOMContentLoaded', () => {
-      const applicant = getApplicantData();
-      if (applicant && applicant.idCard) {
-        citizenInput.value = formatThaiID(applicant.idCard);
-      }
-    });
-
-    // ฟอร์แมตเลขบัตรขณะพิมพ์
-    citizenInput.addEventListener('input', (e) => {
-      const raw = e.target.value.replace(/[^0-9]/g, '');
-      e.target.value = formatThaiID(raw);
-      document.getElementById('citizenIdField').classList.remove('has-error');
-    });
-
-    passwordInput.addEventListener('input', () => {
-      document.getElementById('passwordField').classList.remove('has-error');
-    });
-
-    function handleLogin(e) {
-      e.preventDefault();
-      const rawId = citizenInput.value.replace(/[^0-9]/g, '');
-      const pass = passwordInput.value.trim();
-
-      let hasError = false;
-
-      if (!rawId || rawId.length !== 13) {
-        document.getElementById('citizenIdField').classList.add('has-error');
-        hasError = true;
-      }
-
-      if (!pass) {
-        document.getElementById('passwordField').classList.add('has-error');
-        hasError = true;
-      }
-
-      if (hasError) {
-        showToast('กรุณากรอกข้อมูลเข้าสู่ระบบให้ครบถ้วน', 'error');
-        return;
-      }
-
-      // บันทึก/อัปเดตเลขบัตรประชาชน
-      saveApplicantData({ idCard: rawId });
-      showToast('เข้าสู่ระบบสำเร็จ กำลังพาไปยังหน้าสถานะ...', 'success');
-
-      setTimeout(() => {
-        location.href = 'status.html';
-      }, 700);
-    }
-
-    function forgotPasswordAlert() {
-      alert('หากลืมรหัสผ่าน กรุณาติดต่อสำนักส่งเสริมวิชาการและงานทะเบียน มจพ. โทร 0-2555-2000 ต่อ 1234 หรือใช้อีเมลที่ลงทะเบียนไว้ในการรีเซ็ตรหัสผ่าน');
-    }
-  </script>
+  
 </body>
 </html>
